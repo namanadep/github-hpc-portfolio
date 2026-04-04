@@ -18,4 +18,6 @@ multi-node-nccl-p2p-benchmarks/
 profile/
 slurm-job-analyzer/
 storage-ai-fio-benchmarks/
+amd-enterprise-ai-platform/
+amd-ai-workbench-ops/
 
