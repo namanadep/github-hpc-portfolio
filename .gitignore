@@ -7,3 +7,15 @@ __pycache__/
 *.pem
 .DS_Store
 
+# Each portfolio project is its own repository — do not nest in this meta repo
+cuda-pytorch-optimization-benchmarks/
+h200-gpu-benchmark-suite/
+hpc-gpu-observability-lab/
+llm-inference-observability/
+mi300x-amd-rocm-validation/
+mig-performance-lab/
+multi-node-nccl-p2p-benchmarks/
+profile/
+slurm-job-analyzer/
+storage-ai-fio-benchmarks/
+
