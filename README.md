@@ -7,7 +7,7 @@ This folder contains **ready-to-publish** repositories and a **profile README** 
 
 ## What to do on GitHub
 
-1. **Create a profile README** (special repo `your-username/your-username`): copy `profile/README.md` into that repo’s `README.md`. Adjust links and metrics to match what you are comfortable sharing publicly.
+1. **Create a profile README** (special repo `namanadep/namanadep`): copy `profile/README.md` into that repo’s `README.md`. Adjust links and metrics to match what you are comfortable sharing publicly.
 
 2. **Create six new public repositories** (names below). Copy each subfolder’s contents to the repo root (not the subfolder name nested twice).
 
