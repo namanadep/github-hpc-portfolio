@@ -1,56 +1,100 @@
-# GitHub HPC portfolio — publish kit
+# GitHub HPC portfolio — AMD Instinct / ROCm first
 
-This folder contains **ready-to-publish** repositories and a **profile README** aligned with:
+This index orders repositories by relevance to **AMD GPU software, performance,
+and AI systems** roles. Consolidate and pin in this order.
 
-- Your **Medium_Ready_Articles** series (H200 benchmarks, NVLink/NCCL, storage, OOM, NVIDIA career content).
-- The portfolio feedback: **HPC-first pins**, engineering layout (CLI, configs, tests, results), reproducible benchmarks, and a clear **GPU infrastructure / performance engineering** narrative.
+---
 
-## What to do on GitHub
+## Pins (GitHub UI — profile → Customize your pins)
 
-1. **Create a profile README** (special repo `namanadep/namanadep`): copy `profile/README.md` into that repo’s `README.md`. Adjust links and metrics to match what you are comfortable sharing publicly.
+Pin exactly these six, in order:
 
-2. **Create six new public repositories** (names below). Copy each subfolder’s contents to the repo root (not the subfolder name nested twice).
+| Pin | Repository | One-line signal |
+|-----|------------|-----------------|
+| 1 | [mi300x-amd-rocm-validation](https://github.com/namanadep/mi300x-amd-rocm-validation) | ROCm perf depth — rocprof, RCCL, HBM stress, single-VF before/after |
+| 2 | [amd-enterprise-ai-platform](https://github.com/namanadep/amd-enterprise-ai-platform) | Full AMD Enterprise AI Suite deployment on K8s — every failure documented |
+| 3 | [llm-inference-observability](https://github.com/namanadep/llm-inference-observability) | Qwen3-32B on MI300X VF — SLO table, VRAM, throughput sweep, ROCm case study |
+| 4 | [amd-rocm-gpu-ops](https://github.com/namanadep/amd-rocm-gpu-ops) | Ops health check script + K8s GPU Operator runbook |
+| 5 | [multi-node-nccl-p2p-benchmarks](https://github.com/namanadep/multi-node-nccl-p2p-benchmarks) | H200 NCCL + RoCE investigation + RCCL-on-Instinct companion doc |
+| 6 | [amd-ai-workbench-ops](https://github.com/namanadep/amd-ai-workbench-ops) | AI Workbench install, user guide, model deployment |
 
-3. **Pin these six** on your profile (order is a suggestion):
+**Unpin or demote:** `h200-gpu-benchmark-suite`, `mig-performance-lab`,
+`cuda-pytorch-optimization-benchmarks` — fine as background breadth,
+weak as AMD primary signal.
 
-   | Pin # | Repository | One-line signal |
-   |-------|------------|-----------------|
-   | 1 | `h200-gpu-benchmark-suite` | Single-node GEMM + HBM saturation, methodology, tables |
-   | 2 | `multi-node-nccl-p2p-benchmarks` | P2P / interconnect measurement and CSV export |
-   | 3 | `hpc-gpu-observability-lab` | DCGM/Prometheus-style telemetry + dashboards |
-   | 4 | `mig-performance-lab` | MIG profiles, isolation vs throughput tradeoffs |
-   | 5 | `llm-inference-observability` | Token throughput, batch/TP sweep, structured runs |
-   | 6 | `slurm-job-analyzer` | Scheduler / queue analytics from `sacct` exports |
+---
 
-4. **Fix trust issues**: Unpin or archive repos that 404 or are abandoned. Replace any blog/README link that pointed at `w4_regression_demo` with a live repo or remove the link.
+## Tier 1 — AMD Instinct / ROCm (primary narrative)
 
-5. **Cross-post**: For each repo, add a short LinkedIn post + Medium/dev.to article pointing to the README (matches your `00_PUBLISHING_SCHEDULE.md` LinkedIn workflow).
+### `mi300x-amd-rocm-validation`
+ROCm performance and production-readiness validation.
 
-## Article ↔ repo mapping
+- **8-GPU node:** RCCL all-reduce bandwidth, 1.29 TB HBM stress, thermal at 750 W/GPU, amdgpu Prometheus exporter
+- **Single VF:** `docs/single-vf-rocprof-analysis.md` — torch.profiler trace, rocBLAS kernel identification, FP32→FP16 4.20× speedup, roofline context, VF vs bare-metal caveats
 
-| Medium article (workspace) | Related repo |
-|----------------------------|--------------|
-| `01_H200_Benchmark_Complete_Guide.md` | `h200-gpu-benchmark-suite` |
-| `03_NVLink_How_GPUs_Talk.md`, `10_Distributed_Training_NCCL_Guide.md` | `multi-node-nccl-p2p-benchmarks` |
-| `12_GPU_Memory_OOM_Guide.md` | `llm-inference-observability` (memory hooks section) |
-| `05_Storage_VAST_vs_NetApp.md` | Optional future `storage-fio-ai-workloads` (not in this kit) |
+### `amd-enterprise-ai-platform`
+Field guide for AMD Enterprise AI Suite on bare metal.
 
-## Positioning line (use in bio + profile README)
+- Bloom CLI → RKE2 → ClusterForge → AIRM — documented March 2026 deployment
+- Documented failures: `ndots:5` DNS, Argo CD CRD sync, Canal CNI image, GPU Operator device plugin
+- K8s: RKE2 v1.34.1, AMD GPU Operator v1.4.1, `amd.com/gpu: 1`
 
-**GPU infrastructure and performance engineering** — reproducible benchmarking, multi-GPU communication, observability (DCGM/Prometheus), and scheduler-aware analysis on large NVIDIA GPU systems (e.g. Hopper/H200-class).
+### `llm-inference-observability`
+Inference performance harness — now includes AMD ROCm results.
 
-## Folder layout
+- **AMD:** Qwen3-32B on MI300X VF — TTFT p50 62 ms, 296 tok/s @ conc=8, zero OOM, SLO table — `results/mi300x-vf-qwen3-32b-rocm641.md`
+- **Case study:** `docs/amd-rocm-case-study.md` — hypothesis → measurement → findings → what failed
+- **NVIDIA:** Ollama 704 tok/s on H200 NVL (existing)
 
-```
-github_hpc_portfolio/
-├── README.md                 ← this file
-├── profile/README.md         ← GitHub profile README source
-├── h200-gpu-benchmark-suite/
-├── multi-node-nccl-p2p-benchmarks/
-├── hpc-gpu-observability-lab/
-├── mig-performance-lab/
-├── llm-inference-observability/
-└── slurm-job-analyzer/
-```
+### `amd-rocm-gpu-ops`  ← **NEW**
+Operational tooling for AMD Instinct + K8s nodes.
 
-Each project includes `README.md`, `pyproject.toml`, `src/`, `configs/`, `tests/`, `results/` (samples), and `Dockerfile` or compose where relevant.
+- `scripts/amd-gpu-health-check.sh` — ROCm + K8s pass/fail checks, BOM output
+- `runbooks/rocm-k8s-validation-runbook.md` — step-by-step from first boot to validated inference
+- `results/sample-output.md` — sanitized real run output
+
+### `amd-ai-workbench-ops`
+AMD AI Workbench operations — install checklist, user guide, model deployment.
+
+---
+
+## Tier 2 — Multi-GPU / scaling (AMD + NVIDIA)
+
+### `multi-node-nccl-p2p-benchmarks`
+Real 2-node × 8 H200 cluster NCCL measurements + RoCE failure investigation.
+
+- **NEW:** `docs/RCCL-on-instinct.md` — RCCL vs NCCL API parity, XGMI vs NVLink, VF constraints, single-rank init on 1 GPU, what to measure with 2+ GPUs
+
+---
+
+## Tier 3 — NVIDIA breadth (supporting evidence)
+
+| Repo | Content |
+|------|---------|
+| `h200-gpu-benchmark-suite` | Single-node H200 GEMM + HBM saturation |
+| `cuda-pytorch-optimization-benchmarks` | CUDA kernel fusion, PyTorch optimisation |
+| `hpc-gpu-observability-lab` | DCGM/Prometheus dual-vendor observability |
+| `mig-performance-lab` | MIG profiles, isolation vs throughput |
+| `slurm-job-analyzer` | `sacct` queue analytics |
+| `storage-ai-fio-benchmarks` | FIO storage benchmarks for AI workloads |
+
+These are breadth. If AMD is the primary employer target, do not lead with these.
+
+---
+
+## Profile bio (use in GitHub About + LinkedIn headline)
+
+> GPU infrastructure and performance engineering — AMD Instinct / ROCm, NVIDIA CUDA,
+> Kubernetes GPU operator, LLM inference. I measure things on real hardware.
+
+---
+
+## What to do next (from feedback)
+
+- [ ] Pin the 6 repos above in GitHub UI (cannot be set via API)
+- [ ] Push `amd-rocm-gpu-ops` as new public repo
+- [ ] Add `docs/single-vf-rocprof-analysis.md` to `mi300x-amd-rocm-validation`
+- [ ] Add `results/mi300x-vf-qwen3-32b-rocm641.md` + `docs/amd-rocm-case-study.md` to `llm-inference-observability`
+- [ ] Add `docs/RCCL-on-instinct.md` to `multi-node-nccl-p2p-benchmarks`
+- [ ] Update `namanadep/namanadep` profile README
+- [ ] Pick one upstream project (vLLM ROCm / PyTorch ROCm / docs) and open first PR
